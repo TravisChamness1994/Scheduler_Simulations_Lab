@@ -136,6 +136,8 @@ void sjfStep(void *param)
 void srtfStep(void *param)
 {
 // TODO: implement
+//Fixing using removeFromReady.. and findShortestProc...
+//  Will Return when SJF runs successfully again.
     ALGORITHM_PARAMS *p = (ALGORITHM_PARAMS *) param;
     PROCESS *proc = NULL;
      if (p->cpu == NULL || p->cpu->burstTime == 0)

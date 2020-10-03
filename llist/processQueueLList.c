@@ -147,17 +147,14 @@ void addProcessToReadyQueue(PROCESS *process)
 void removeProcessFromReadyQueue(PROCESS *process)
 {
 // TODO: implement
-    PROCESS *curr = readyQueueHead;
-    if(readyQueueHead->next == NULL)
-    {
-        readyQueueHead = NULL;
-        readyQueueTail =NULL;
-    }
-    else {
-        readyQueueHead = readyQueueHead->next;
+        if (process == readyQueueHead) {
+            readyQueueHead = readyQueueHead->next;
+        } else if (process == readyQueueTail) {
+            readyQueueTail = readyQueueTail->previous;
+        } else {
+            process->next->previous = process->previous;
+            process->previous->next = process->next;
         }
-
-    free(curr);
 }
 
 /***
@@ -199,14 +196,9 @@ PROCESS *findShortestProcessInReadyQueue()
                 curr = curr->next;
             }
         }
-        if (shortest_job == readyQueueHead) {
-            readyQueueHead = readyQueueHead->next;
-        } else if (shortest_job == readyQueueTail) {
-            readyQueueTail = readyQueueTail->previous;
-        } else {
-            shortest_job->next->previous = shortest_job->previous;
-            shortest_job->previous->next = shortest_job->next;
-        }
+        removeProcessFromReadyQueue(shortest_job);
+        //Replace with removeProcessFrom... function.
+
     }
     return shortest_job;
 }
