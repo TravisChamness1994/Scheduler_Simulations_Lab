@@ -78,17 +78,19 @@ bool processesLeftToExecute()
 /***
  * adds any processes that arrive at the current time to ready queue
  */
+ //TODO - Make the process pass properly. Currently passing a new pointer containing copy, but I need to be accessing the actual struct. - Check out the git commit 3d76dc825cb8ea386ada1835a9bfa5b90c480b7d
  //Look for an oncoming process at time, if there is a new process, point to that new process.
  //add that process to the readyQueueHead
 void addArrivingProcessesToReadyQueue(int time)
 {
 // TODO: implement - Work
     bool nextProcess = false;
+    int procIndex;
 //    PROCESS *newProcess = (PROCESS*)malloc(sizeof(PROCESS));
-    PROCESS *newProcess = (PROCESS*)malloc(sizeof(PROCESS));
      for (int i = 0; !nextProcess && i < processTableSize; ++i) {
         if(processTable[i].entryTime == time) {
-            *newProcess = processTable[i];
+//            *newProcess = processTable[i];
+            procIndex = i;
             nextProcess = true;
         }
     }
@@ -96,18 +98,23 @@ void addArrivingProcessesToReadyQueue(int time)
     if(nextProcess)
     {
         if (readyQueueHead == NULL) {
-            readyQueueHead = newProcess;
-            readyQueueTail = newProcess;
-
 //            readyQueueHead = newProcess;
+            readyQueueHead = &processTable[procIndex];
 //            readyQueueTail = newProcess;
-            newProcess->next = NULL;
-            newProcess->previous = NULL;
+            readyQueueTail = &processTable[procIndex];
+//            newProcess->next = NULL;
+            processTable[procIndex].next = NULL;
+//            newProcess->previous = NULL;
+            processTable[procIndex].previous = NULL;
         } else {
-            newProcess->previous = readyQueueTail;
-            readyQueueTail->next = newProcess;
-            readyQueueTail = newProcess;
-            newProcess->next = NULL;
+//            newProcess->previous = readyQueueTail;
+            processTable[procIndex].previous = readyQueueTail;
+//            readyQueueTail->next = newProcess;
+            readyQueueTail->next = &processTable[procIndex];
+//            readyQueueTail = newProcess;
+            readyQueueTail = &processTable[procIndex];
+//            newProcess->next = NULL;
+            processTable[procIndex].next = NULL;
         }
     }
 }
@@ -121,6 +128,8 @@ void addProcessToReadyQueue(PROCESS *process)
     {
         *readyQueueHead = *process;
         *readyQueueTail = *process;
+        process->next = NULL;
+        process->previous = NULL;
     }
     else
     {
@@ -141,8 +150,8 @@ void removeProcessFromReadyQueue(PROCESS *process)
     PROCESS *curr = readyQueueHead;
     if(readyQueueHead->next == NULL)
     {
-        readyQueueHead == NULL;
-        readyQueueTail ==NULL;
+        readyQueueHead = NULL;
+        readyQueueTail =NULL;
     }
     else {
         readyQueueHead = readyQueueHead->next;
@@ -163,6 +172,11 @@ PROCESS *fetchFirstProcessFromReadyQueue()
     if(readyQueueHead != NULL)
     {
         readyQueueHead = readyQueueHead->next;
+    }
+    else
+    {
+        readyQueueHead = NULL;
+        readyQueueTail = NULL;
     }
     return curr;
 }
@@ -222,10 +236,6 @@ void printAverageWaitTime()
  */
 void cleanUp()
 {
-    for (int i = 0; i < processTableSize; ++i) {
-        free(processTable[i].next);
-        free(processTable[i].previous);
-    }
     free(processTable);
 // TODO: implement - work
 }
