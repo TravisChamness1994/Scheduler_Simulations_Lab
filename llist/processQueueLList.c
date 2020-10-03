@@ -126,8 +126,8 @@ void addProcessToReadyQueue(PROCESS *process)
 {
     if(readyQueueHead == NULL)
     {
-        *readyQueueHead = *process;
-        *readyQueueTail = *process;
+        readyQueueHead = process;
+        readyQueueTail = process;
         process->next = NULL;
         process->previous = NULL;
     }
@@ -188,27 +188,26 @@ PROCESS *fetchFirstProcessFromReadyQueue()
 PROCESS *findShortestProcessInReadyQueue()
 {
 // TODO: implement - Work
-    PROCESS *shortest_job = readyQueueHead;
-    PROCESS *curr = readyQueueHead->next;
-    while(curr != NULL)
-    {
-        if(shortest_job->burstTime > curr->burstTime)
-            shortest_job = curr;
-        curr = curr->next;
-    }
-    if(shortest_job == readyQueueHead)
-    {
-        readyQueueHead = readyQueueHead->next;
-    }
-    else if(shortest_job == readyQueueTail)
-    {
-        readyQueueTail = readyQueueTail->previous;
-    }
-    else
-        {
+    PROCESS *shortest_job = NULL;
+    if(readyQueueHead != NULL) {
+        shortest_job = readyQueueHead;
+        if (shortest_job->next != NULL) {
+            PROCESS *curr = shortest_job->next;
+            while (curr != NULL) {
+                if (shortest_job->burstTime > curr->burstTime)
+                    shortest_job = curr;
+                curr = curr->next;
+            }
+        }
+        if (shortest_job == readyQueueHead) {
+            readyQueueHead = readyQueueHead->next;
+        } else if (shortest_job == readyQueueTail) {
+            readyQueueTail = readyQueueTail->previous;
+        } else {
             shortest_job->next->previous = shortest_job->previous;
             shortest_job->previous->next = shortest_job->next;
         }
+    }
     return shortest_job;
 }
 

@@ -132,11 +132,24 @@ void sjfStep(void *param)
 /***
  * function implementing a step of SRTF
  */
+ //For every CPU time unit, we need to check if the oncoming
 void srtfStep(void *param)
 {
-
 // TODO: implement
+    ALGORITHM_PARAMS *p = (ALGORITHM_PARAMS *) param;
+    PROCESS *proc = NULL;
+     if (p->cpu == NULL || p->cpu->burstTime == 0)
+     {
+         p->cpu = findShortestProcessInReadyQueue();
+     }
+     else if((proc = findShortestProcessInReadyQueue()) != NULL && (proc->burstTime < p->cpu->burstTime))
+     {
+             addProcessToReadyQueue(p->cpu);
+             p->cpu = proc;
 
+     }
+    if (p->cpu != NULL)
+        p->cpu->waitTime = p->time - p->cpu->entryTime; // update the wait time
 }
 
 /***
