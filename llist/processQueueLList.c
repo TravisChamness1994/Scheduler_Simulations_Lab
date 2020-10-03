@@ -194,7 +194,21 @@ PROCESS *findShortestProcessInReadyQueue()
     {
         if(shortest_job->burstTime > curr->burstTime)
             shortest_job = curr;
+        curr = curr->next;
     }
+    if(shortest_job == readyQueueHead)
+    {
+        readyQueueHead = readyQueueHead->next;
+    }
+    else if(shortest_job == readyQueueTail)
+    {
+        readyQueueTail = readyQueueTail->previous;
+    }
+    else
+        {
+            shortest_job->next->previous = shortest_job->previous;
+            shortest_job->previous->next = shortest_job->next;
+        }
     return shortest_job;
 }
 
