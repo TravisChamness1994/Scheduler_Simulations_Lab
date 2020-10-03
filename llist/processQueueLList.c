@@ -78,28 +78,37 @@ bool processesLeftToExecute()
 /***
  * adds any processes that arrive at the current time to ready queue
  */
+ //Look for an oncoming process at time, if there is a new process, point to that new process.
+ //add that process to the readyQueueHead
 void addArrivingProcessesToReadyQueue(int time)
 {
 // TODO: implement - Work
+    bool nextProcess = false;
+//    PROCESS *newProcess = (PROCESS*)malloc(sizeof(PROCESS));
     PROCESS *newProcess = (PROCESS*)malloc(sizeof(PROCESS));
-    for (int i = 0; i < processTableSize; ++i) {
-        if(processTable[i].entryTime == time)
+     for (int i = 0; !nextProcess && i < processTableSize; ++i) {
+        if(processTable[i].entryTime == time) {
             *newProcess = processTable[i];
+            nextProcess = true;
+        }
     }
 
-    if(readyQueueHead == NULL)
+    if(nextProcess)
     {
-        readyQueueHead = newProcess;
-        readyQueueTail = newProcess;
-        newProcess->next = NULL;
-        newProcess->previous = NULL;
-    }
-    else
-    {
-        newProcess->previous = readyQueueTail;
-        readyQueueTail->next = newProcess;
-        readyQueueTail = newProcess;
-        newProcess->next = NULL;
+        if (readyQueueHead == NULL) {
+            readyQueueHead = newProcess;
+            readyQueueTail = newProcess;
+
+//            readyQueueHead = newProcess;
+//            readyQueueTail = newProcess;
+            newProcess->next = NULL;
+            newProcess->previous = NULL;
+        } else {
+            newProcess->previous = readyQueueTail;
+            readyQueueTail->next = newProcess;
+            readyQueueTail = newProcess;
+            newProcess->next = NULL;
+        }
     }
 }
 
@@ -130,17 +139,32 @@ void removeProcessFromReadyQueue(PROCESS *process)
 {
 // TODO: implement
     PROCESS *curr = readyQueueHead;
-    readyQueueHead = readyQueueHead->next;
+    if(readyQueueHead->next == NULL)
+    {
+        readyQueueHead == NULL;
+        readyQueueTail ==NULL;
+    }
+    else {
+        readyQueueHead = readyQueueHead->next;
+        }
+
     free(curr);
 }
 
 /***
  * fetches the first process from the ready queue
  */
+ //Set a current to the ready queue head
+ //increment ready queue head to next.
 PROCESS *fetchFirstProcessFromReadyQueue()
 {
 // TODO: implement - Work
-    return readyQueueHead;
+    PROCESS *curr = readyQueueHead;
+    if(readyQueueHead != NULL)
+    {
+        readyQueueHead = readyQueueHead->next;
+    }
+    return curr;
 }
 
 /***
