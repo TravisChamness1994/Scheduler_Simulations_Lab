@@ -110,12 +110,24 @@ void fcfsStep(void *param)
 /***
  * function implementing a step of SJF
  */
+ //Step1: Load Parameter into a p structure.
+ // - Queue will build as normal as the incoming processes accumulate.
+ //Step2: Allow process to finish. Once process finishes, search for the next shortest job
+ //     to be selected to be put onto the CPU.
+ //Step3: Once onto the CPU, we need to calculate
 void sjfStep(void *param)
 {
-
 // TODO: implement
+     ALGORITHM_PARAMS *p = (ALGORITHM_PARAMS *) param;
+     if (p->cpu == NULL || p->cpu->burstTime == 0)
+     {
+         p->cpu = findShortestProcessInReadyQueue();
+         if (p->cpu != NULL)
+             p->cpu->waitTime = p->time - p->cpu->entryTime; // update the wait time
+     }
 
-}
+
+ }
 
 /***
  * function implementing a step of SRTF
