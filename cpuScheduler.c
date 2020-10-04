@@ -126,35 +126,32 @@ void sjfStep(void *param)
          if (p->cpu != NULL)
              p->cpu->waitTime = p->time - p->cpu->entryTime; // update the wait time
      }
-
-
  }
 
 /***
  * function implementing a step of SRTF
  */
  //For every CPU time unit, we need to check if the oncoming
-void srtfStep(void *param)
-{
+void srtfStep(void *param) {
 // TODO: implement
 //Fixing using removeFromReady.. and findShortestProc...
 //  Will Return when SJF runs successfully again.
-    ALGORITHM_PARAMS *p = (ALGORITHM_PARAMS *) param;
-    PROCESS *proc = NULL;
-     if (p->cpu == NULL || p->cpu->burstTime == 0)
-     {
+     ALGORITHM_PARAMS *p = (ALGORITHM_PARAMS *) param;
+     PROCESS *proc = NULL;
+     if (p->cpu == NULL || p->cpu->burstTime == 0) {
          p->cpu = findShortestProcessInReadyQueue();
+         removeProcessFromReadyQueue(p->cpu);
      }
-     else if((proc = findShortestProcessInReadyQueue()) != NULL && (proc->burstTime < p->cpu->burstTime))
-     {
+     if (p->cpu != NULL) {
+         if((proc = findShortestProcessInReadyQueue()) != NULL && (proc->burstTime < p->cpu->burstTime))
+         {
              addProcessToReadyQueue(p->cpu);
              p->cpu = proc;
-
+             removeProcessFromReadyQueue(p->cpu);
+         }
+         p->cpu->waitTime = p->time - p->cpu->entryTime; // update the wait time
      }
-    if (p->cpu != NULL)
-        p->cpu->waitTime = p->time - p->cpu->entryTime; // update the wait time
-}
-
+ }
 /***
  * function implementing a step of RR
  */

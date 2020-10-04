@@ -151,6 +151,7 @@ void removeProcessFromReadyQueue(PROCESS *process)
         if (process == readyQueueHead) {
             readyQueueHead = readyQueueHead->next;
         } else if (process == readyQueueTail) {
+            readyQueueTail->previous->next = NULL;
             readyQueueTail = readyQueueTail->previous;
         } else {
             process->next->previous = process->previous;
