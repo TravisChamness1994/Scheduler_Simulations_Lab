@@ -121,14 +121,8 @@ void sjfStep(void *param)
      ALGORITHM_PARAMS *p = (ALGORITHM_PARAMS *) param;
      if (p->cpu == NULL || p->cpu->burstTime == 0)
      {
-         //TempLine 125
-
-         if(p->cpu != NULL)
-         {
-             PROCESS* removePocess = p->cpu;
-             removeProcessFromReadyQueue(removePocess);
-         }
          p->cpu = findShortestProcessInReadyQueue();
+         removeProcessFromReadyQueue(p->cpu);
          if (p->cpu != NULL)
              p->cpu->waitTime = p->time - p->cpu->entryTime; // update the wait time
      }

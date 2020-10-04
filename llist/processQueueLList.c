@@ -197,8 +197,6 @@ PROCESS *findShortestProcessInReadyQueue()
                 curr = curr->next;
             }
         }
-//        removeProcessFromReadyQueue(shortest_job);
-        //Replace with removeProcessFrom... function.
     }
     return shortest_job;
 }
