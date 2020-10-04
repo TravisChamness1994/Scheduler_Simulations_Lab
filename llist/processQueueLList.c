@@ -147,6 +147,7 @@ void addProcessToReadyQueue(PROCESS *process)
 void removeProcessFromReadyQueue(PROCESS *process)
 {
 // TODO: implement
+
         if (process == readyQueueHead) {
             readyQueueHead = readyQueueHead->next;
         } else if (process == readyQueueTail) {
@@ -196,9 +197,8 @@ PROCESS *findShortestProcessInReadyQueue()
                 curr = curr->next;
             }
         }
-        removeProcessFromReadyQueue(shortest_job);
+//        removeProcessFromReadyQueue(shortest_job);
         //Replace with removeProcessFrom... function.
-
     }
     return shortest_job;
 }
