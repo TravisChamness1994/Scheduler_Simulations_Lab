@@ -131,7 +131,8 @@ void sjfStep(void *param)
 /***
  * function implementing a step of SRTF
  */
- //For every CPU time unit, we need to check if the oncoming
+ //ERROR: Waiting times are not correct. Some are doubled, others are more than doubled.
+ //     Look to where we increment the value of wait time per process.
 void srtfStep(void *param) {
 // TODO: implement
 //Fixing using removeFromReady.. and findShortestProc...
@@ -141,25 +142,48 @@ void srtfStep(void *param) {
      if (p->cpu == NULL || p->cpu->burstTime == 0) {
          p->cpu = findShortestProcessInReadyQueue();
          removeProcessFromReadyQueue(p->cpu);
+         p->cpu->waitTime += p->time - p->cpu->offTime; // update the wait time
+
      }
      if (p->cpu != NULL) {
          if((proc = findShortestProcessInReadyQueue()) != NULL && (proc->burstTime < p->cpu->burstTime))
          {
              addProcessToReadyQueue(p->cpu);
+             p->cpu->offTime = p->time;
              p->cpu = proc;
              removeProcessFromReadyQueue(p->cpu);
          }
-         p->cpu->waitTime = p->time - p->cpu->entryTime; // update the wait time
      }
  }
 /***
  * function implementing a step of RR
  */
+
 void rrStep(void *param)
 {
-
 // TODO: implement
+    ALGORITHM_PARAMS *p = (ALGORITHM_PARAMS *) param;
 
+    p->quantum ++;
+    if(p->cpu == NULL || p->cpu->burstTime == 0)
+    {
+        p->cpu = fetchFirstProcessFromReadyQueue();
+        removeProcessFromReadyQueue(p->cpu);
+        p->quantum = 0;
+        p->cpu->waitTime += p->time - p->cpu->offTime;
+
+    }
+    if(p->cpu != NULL)
+    {
+        if(p->quantum >= quantum)
+        {
+            addProcessToReadyQueue(p->cpu);
+            p->cpu->offTime = p->time;
+            p->cpu = fetchFirstProcessFromReadyQueue();
+            removeProcessFromReadyQueue(p->cpu);
+            p->quantum = 0;
+        }
+    }
 }
 
 /***
