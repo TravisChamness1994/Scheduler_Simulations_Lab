@@ -168,10 +168,7 @@ PROCESS *fetchFirstProcessFromReadyQueue()
 {
 // TODO: implement - Work
      PROCESS *curr = NULL;
-//     if(readyQueueHead == readyQueueTail)
-//     {
-//         curr = readyQueueHead;
-//     }
+
      if(readyQueueHead != NULL)
      {
          curr = readyQueueHead;
@@ -181,16 +178,6 @@ PROCESS *fetchFirstProcessFromReadyQueue()
          readyQueueHead = NULL;
          readyQueueTail = NULL;
      }
-//    PROCESS *curr = readyQueueHead;
-//    if(readyQueueHead != NULL)
-//    {
-//        readyQueueHead = readyQueueHead->next;
-//    }
-//    else
-//    {
-//        readyQueueHead = NULL;
-//        readyQueueTail = NULL;
-//    }
     return curr;
 }
 

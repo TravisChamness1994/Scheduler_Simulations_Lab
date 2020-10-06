@@ -148,9 +148,10 @@ void srtfStep(void *param) {
      if (p->cpu != NULL) {
          if((proc = findShortestProcessInReadyQueue()) != NULL && (proc->burstTime < p->cpu->burstTime))
          {
-             addProcessToReadyQueue(p->cpu);
              p->cpu->offTime = p->time;
+             addProcessToReadyQueue(p->cpu);
              p->cpu = proc;
+             p->cpu->waitTime = p->time - p->cpu->offTime;
              removeProcessFromReadyQueue(p->cpu);
          }
      }
@@ -180,6 +181,7 @@ void rrStep(void *param)
             addProcessToReadyQueue(p->cpu);
             p->cpu->offTime = p->time;
             p->cpu = fetchFirstProcessFromReadyQueue();
+            p->cpu->waitTime += p->time - p->cpu->offTime;
             removeProcessFromReadyQueue(p->cpu);
             p->quantum = 0;
         }
