@@ -1,3 +1,8 @@
+/*
+**Name: Travis Chamness
+**Lab: Lab06
+**Date: 10/05/2020
+*/
 #include "processQueue.h"
 
 // the process table to hold all processes

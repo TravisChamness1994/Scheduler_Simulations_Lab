@@ -1,3 +1,8 @@
+/*
+**Name: Travis Chamness
+**Lab: Lab06
+**Date: 10/05/2020
+*/
 #include "cpuScheduler.h"
 
 static int quantum;
@@ -102,6 +107,7 @@ void fcfsStep(void *param)
     if (p->cpu == NULL || p->cpu->burstTime == 0)
     {
         p->cpu = fetchFirstProcessFromReadyQueue(); //start executing the first process in the ready queue
+        removeProcessFromReadyQueue(p->cpu);
         if (p->cpu != NULL)
             p->cpu->waitTime = p->time - p->cpu->entryTime; // update the wait time
     }
